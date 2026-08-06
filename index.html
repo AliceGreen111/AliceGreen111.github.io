@@ -1,0 +1,2831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>小游戏合集</title>
+  <style>
+/* ===== 清新卡通风 全局样式 ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-from: #e8f5ff;
+  --bg-to: #fff7e8;
+  --card-bg: #ffffff;
+  --text-main: #3d4a5c;
+  --text-soft: #8a97a8;
+  --accent: #ff9d5c;
+  --accent2: #5cb8ff;
+  --shadow: 0 6px 20px rgba(90, 120, 160, 0.18);
+  --radius: 18px;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  color: var(--text-main);
+  background: linear-gradient(160deg, var(--bg-from), var(--bg-to));
+  background-attachment: fixed;
+}
+
+body { overflow-x: hidden; }
+
+.view {
+  min-height: 100vh;
+  padding: 24px 16px 40px;
+}
+
+/* ===== 开始菜单 ===== */
+.view-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-wrap {
+  max-width: 860px;
+  width: 100%;
+  text-align: center;
+}
+
+.menu-title {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(120deg, #ff9d5c, #ff6f91, #5cb8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(255, 157, 92, 0.15);
+  margin-bottom: 8px;
+}
+
+.menu-subtitle {
+  color: var(--text-soft);
+  font-size: 16px;
+  margin-bottom: 36px;
+}
+
+.menu-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 16px 22px;
+  background: var(--card-bg);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  font-family: inherit;
+  color: var(--text-main);
+}
+
+.game-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(90, 120, 160, 0.28);
+}
+
+.game-card:active { transform: translateY(-2px) scale(0.99); }
+
+.card-icon { font-size: 52px; line-height: 1; }
+.card-name { font-size: 22px; font-weight: 700; }
+.card-desc { font-size: 13px; color: var(--text-soft); }
+
+.menu-stats {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.menu-stats span {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 5px 14px;
+  border-radius: 999px;
+}
+
+/* ===== 游戏视图 ===== */
+.view-game { padding-top: 16px; }
+
+.game-header {
+  max-width: 1000px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(90, 120, 160, 0.15);
+  transition: transform 0.12s ease, background 0.12s ease;
+  font-family: inherit;
+}
+
+.btn-back:hover { background: #ffffff; transform: translateY(-2px); }
+
+.game-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.header-spacer { width: 92px; }
+
+.game-root {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 游戏通用面板（状态条） */
+.panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  box-shadow: 0 3px 12px rgba(90, 120, 160, 0.12);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.panel .pill {
+  background: #f0f6ff;
+  border-radius: 999px;
+  padding: 4px 14px;
+  white-space: nowrap;
+}
+
+.panel .pill.warn { background: #ffe9e0; color: #e0603a; }
+.panel .pill.good { background: #e6f7ec; color: #2fa15e; }
+
+.btn {
+  background: linear-gradient(120deg, var(--accent2), var(--accent));
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+  font-family: inherit;
+}
+
+.btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { filter: grayscale(0.6) brightness(0.9); cursor: not-allowed; transform: none; }
+
+.btn.ghost {
+  background: #eef3f9;
+  color: var(--text-main);
+}
+
+/* ===== 弹窗 ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(50, 65, 85, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 30px 36px;
+  max-width: 420px;
+  width: calc(100% - 40px);
+  text-align: center;
+  box-shadow: 0 18px 50px rgba(40, 60, 90, 0.35);
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-icon { font-size: 52px; margin-bottom: 8px; }
+.modal-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.modal-message { color: var(--text-soft); font-size: 15px; line-height: 1.6; margin-bottom: 20px; white-space: pre-line; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ===== 数独 ===== */
+.sd-board {
+  display: grid;
+  gap: 0;
+  background: #ffffff;
+  border: 3px solid #3d4a5c;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  user-select: none;
+  max-width: 560px;
+}
+
+/* 字号按尺寸档位（小屏由媒体查询覆盖） */
+.sd-board[data-size="9"] .sd-cell { font-size: 24px; }
+.sd-board[data-size="12"] .sd-cell { font-size: 16px; }
+.sd-board[data-size="16"] .sd-cell { font-size: 12px; }
+
+.sd-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-main);
+  border: 1px solid #d8e0ea;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;   /* 固定正方形（去掉 min-height，避免小屏时高>宽） */
+  transition: background 0.1s;
+}
+
+.sd-cell.box-top { border-top: 2px solid #3d4a5c; }
+.sd-cell.box-left { border-left: 2px solid #3d4a5c; }
+.sd-cell.given { font-weight: 800; color: #1f2d3d; }
+
+/* 点击高亮：十字线 + 相同数字 */
+.sd-cell.hl-cross { background: #eef4fb; }
+.sd-cell.hl-same { background: #d6e8fb; }
+.sd-cell.hl-cross.hl-same { background: #cfe3f8; }
+
+/* 高优先级：错误/选中置于 hl 之后，不被高亮覆盖 */
+.sd-cell.err { color: #e04f3a; background: #ffe9e9; font-weight: 800; }
+.sd-cell.selected { background: #fff0d9; box-shadow: inset 0 0 0 2px #ff9d5c; }
+.sd-cell:hover { background: #f2f8ff; }
+
+.sd-note {
+  font-size: 11px;   /* 笔记加大，易看清 */
+  color: #c8d4e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sd-note.on { color: #5b7a9a; font-weight: 700; }
+
+.sd-numpad {
+  display: grid;
+  gap: 6px;
+  max-width: 560px;
+}
+
+.sd-key { padding: 8px 4px; font-size: 15px; }
+.sd-key:disabled {
+  background: #e9eef4;
+  color: #b3bfcc;
+  filter: none;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.sd-generating {
+  padding: 40px;
+  font-size: 16px;
+  color: var(--text-soft);
+}
+
+/* ===== 消消乐 ===== */
+.game-root[data-game="match3"] .panel { max-width: 640px; }
+
+.task-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 640px;
+}
+
+.task-item {
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(90, 120, 160, 0.12);
+  border: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.task-item.done {
+  border-color: #4cc97e;
+  background: #eefaf2;
+  color: #2fa15e;
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.match3-board {
+  display: grid;
+  position: relative;   /* 评价文字定位基准 */
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: var(--shadow);
+  user-select: none;
+}
+
+.m3-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s;
+  animation: m3Pop 0.18s ease;
+}
+
+.m3-cell:hover { background: #f2f8ff; }
+.m3-cell.selected {
+  background: #fff0d9;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px #ff9d5c;
+  z-index: 2;
+}
+
+.m3-cell.swap-anim { transition: transform 0.16s ease; }
+.m3-cell.dropping { transition: transform 0.22s ease-in; }
+
+/* 交换位移动画 */
+.m3-cell.swap-anim {
+  transition: transform 0.16s ease;
+  z-index: 3;
+}
+
+/* 下落滑入动画 */
+.m3-cell.drop-in { animation: m3DropIn 0.3s ease; }
+
+@keyframes m3DropIn {
+  from { transform: translateY(-38px); opacity: 0.2; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* 错误提示：抖动 + 红边 */
+.m3-cell.shake {
+  animation: m3Shake 0.32s ease;
+  background: #ffe3e3;
+  box-shadow: inset 0 0 0 2px #ff6b6b;
+}
+
+@keyframes m3Shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* 消除评价文字 */
+.fx-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  animation: fxPop 1.25s ease forwards;
+  /* 白色描边 + 阴影，颜色更显眼 */
+  -webkit-text-stroke: 2.5px #ffffff;
+  paint-order: stroke fill;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 14px rgba(255, 255, 255, 0.7);
+}
+
+.fx-good { color: #3aa0ff; }
+.fx-perfect { color: #ff8c2e; }
+.fx-wonderful { color: #e14f9e; font-size: 40px; }
+.fx-amazing { color: #8f4fd6; font-size: 40px; }
+.fx-unbelievable { color: #ff3d71; font-size: 44px; }
+.fx-godlike { color: #ffb400; font-size: 46px; }
+.fx-legendary { color: #ff7a00; font-size: 50px; }
+
+/* 1.25s：弹入 → 停留 → 平滑淡出 + 上浮 */
+@keyframes fxPop {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  12% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  20% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  72% { transform: translate(-50%, -50%) scale(1) translateY(0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.25) translateY(-28px); opacity: 0; }
+}
+
+@keyframes m3Pop {
+  from { transform: scale(0.5); opacity: 0.3; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.m3-cell.clearing {
+  animation: m3Clear 0.28s ease forwards;
+}
+
+@keyframes m3Clear {
+  0% { transform: scale(1); opacity: 1; }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* ===== 连连看 ===== */
+.game-root[data-game="lianliankan"] .panel { max-width: 720px; }
+
+.llk-wrap { position: relative; }
+
+.llk-board {
+  display: grid;
+  position: relative;       /* 粒子/选中高亮的定位基准 */
+  gap: 6px;                 /* 格子间距 */
+  background: #e8f0f8;      /* 浅色底衬托格子 */
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+  user-select: none;
+}
+
+.llk-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  aspect-ratio: 1 / 1;   /* 固定正方形：消除后空行也不会塌陷 */
+  background: linear-gradient(150deg, #ffffff 60%, #e8f0f8);  /* 体积感高光 */
+  border: 2px solid #d3dfeb;
+  border-radius: 9px;
+  box-shadow: 0 3px 0 #b9c8d8, inset 0 1px 1px rgba(255, 255, 255, 0.95);  /* 底部投影凸起 */
+  cursor: pointer;
+  transition: background 0.12s, transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+
+/* 已消除的空格：保留固定格子位置与可见边界（不再透明连片） */
+.llk-cell.empty {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.5);
+  border-color: #e2eaf3;
+  box-shadow: none;
+  font-size: 0;
+}
+.llk-cell:hover:not(.empty) {
+  background: linear-gradient(150deg, #f7fbff, #e8f4ff);
+  border-color: #9ccdf5;
+  box-shadow: 0 4px 0 #a9c4dc;
+  transform: translateY(-1px);
+}
+
+.llk-cell.selected {
+  background: linear-gradient(150deg, #fff6e4, #ffe9c4);
+  border-color: #ff9d5c;
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 5px 0 #d88a4f;
+  z-index: 2;
+}
+
+/* 错误提示：抖动 + 红边 */
+.llk-cell.shake {
+  animation: llkShake 0.4s ease;
+  border-color: #ff6b6b;
+  background: #ffe9e9;
+  box-shadow: 0 3px 0 #d88a8a, inset 0 0 0 2px #ff8a8a;
+}
+
+@keyframes llkShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+.llk-cell.removing {
+  animation: llkRemove 0.5s ease forwards;
+  z-index: 3;
+}
+
+@keyframes llkRemove {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.4); filter: brightness(1.7); }
+  100% { transform: scale(0); filter: brightness(2.2); opacity: 0; }
+}
+
+/* 粒子碎裂碎片 */
+.llk-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  line-height: 1;
+  animation: llkBurst 0.55s cubic-bezier(.2, .7, .4, 1) forwards;
+}
+
+@keyframes llkBurst {
+  0% { transform: translate(-50%, -50%) translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.25) rotate(var(--rot)); opacity: 0; }
+}
+
+.llk-cell.hint {
+  animation: hintPulse 0.8s ease infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(92, 184, 255, 0.8); }
+  50% { box-shadow: 0 0 0 6px rgba(92, 184, 255, 0.15); }
+}
+
+.llk-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ===== 2048 ===== */
+.game-root[data-game="game2048"] .panel { max-width: 560px; }
+
+/* 目标标题 + 进度条 */
+.g2048-goal {
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+}
+
+.goal-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.goal-bar {
+  height: 14px;
+  background: #f0e6d8;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.goal-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5cb8ff, #e56aa8, #ff9d5c);
+  transition: width 0.4s ease;
+}
+
+.goal-max {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.g2048-board {
+  display: grid;
+  gap: 6px;                 /* 格子占满盘子 */
+  background: #dcc9ac;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+  user-select: none;
+}
+
+.g2048-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 800;
+  border-radius: 8px;
+  aspect-ratio: 1 / 1;      /* 正方形格子 */
+  color: #6b5b45;
+  box-shadow: 0 4px 0 rgba(90, 70, 40, 0.28), inset 0 2px 3px rgba(255, 255, 255, 0.75);  /* 体积感 */
+  transition: transform 0.1s ease;
+}
+
+.g2048-cell.new {
+  animation: g2048Drop 0.32s cubic-bezier(.3, .75, .4, 1.15);   /* 重力掉落 + 轻微弹跳 */
+}
+
+@keyframes g2048Drop {
+  from { transform: translateY(-72px); opacity: 0; }
+  60% { opacity: 1; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.g2048-cell.merged { animation: g2048Merge 0.22s ease; }
+
+@keyframes g2048Merge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* ===== 扫雷 ===== */
+.game-root[data-game="minesweeper"] .panel { max-width: 640px; }
+
+.ms-board {
+  display: grid;
+  max-width: 640px;
+  background: #c8d0d8;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: var(--shadow);
+  user-select: none;
+  border: 3px solid #aeb8c2;
+}
+
+.ms-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  min-height: 26px;
+  aspect-ratio: 1 / 1;   /* 格子固定正方形，杜绝高度塌陷 */
+  padding: 2px;
+  border: none;
+  cursor: pointer;
+  background: #dde4ea;
+  box-shadow: inset 2px 2px 0 #ffffff, inset -2px -2px 0 #9aa6b2;
+  font-family: inherit;
+}
+
+.ms-cell.revealed {
+  background: #e8edf2;
+  box-shadow: inset 1px 1px 0 #c2cbd4;
+  cursor: default;
+}
+
+.ms-cell.revealed.mine { background: #ff6b6b; }
+.ms-cell .ms-num-1 { color: #1a6fd6; }
+.ms-cell .ms-num-2 { color: #2e9e44; }
+.ms-cell .ms-num-3 { color: #e04f3a; }
+.ms-cell .ms-num-4 { color: #7b3fd4; }
+.ms-cell .ms-num-5 { color: #c23a6b; }
+.ms-cell .ms-num-6 { color: #2ea8a8; }
+.ms-cell .ms-num-7 { color: #5b6b8c; }
+.ms-cell .ms-num-8 { color: #8c8c8c; }
+
+/* ===== 响应式（电脑端为主，手机适配） ===== */
+@media (max-width: 720px) {
+  .view { padding: 14px 10px 24px; }
+  .menu-title { font-size: 32px; }
+  .menu-subtitle { font-size: 13px; margin-bottom: 20px; }
+  .menu-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .game-card { padding: 16px 10px; }
+  .card-icon { font-size: 38px; }
+  .card-name { font-size: 17px; }
+  .card-desc { font-size: 11px; }
+  .menu-stats { font-size: 11px; gap: 6px 10px; }
+
+  .game-header { flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .game-title { font-size: 19px; }
+  .panel { font-size: 13px; padding: 8px 12px; gap: 8px 12px; }
+  .btn { font-size: 13px; padding: 7px 14px; }
+
+  /* 棋盘按屏宽自适应 */
+  .llk-board, .sd-board, .g2048-board, .ms-board { max-width: 96vw; }
+  .llk-cell { font-size: 15px; }
+  .llk-cell.empty { font-size: 15px; }
+  .fx-text { font-size: 22px; }
+  .fx-wonderful, .fx-amazing { font-size: 28px; }
+  .fx-unbelievable { font-size: 30px; }
+
+  .sd-board[data-size="9"] .sd-cell { font-size: 17px; }
+  .sd-board[data-size="12"] .sd-cell { font-size: 12px; }
+  .sd-board[data-size="16"] .sd-cell { font-size: 9px; }
+  .sd-note { font-size: 9px; }
+  .sd-numpad { gap: 4px; max-width: 96vw; }
+  .sd-key { padding: 6px 2px; font-size: 13px; }
+
+  .g2048-cell { font-size: 18px !important; }   /* 覆盖内联字号 */
+  .goal-title { font-size: 18px; }
+
+  .ms-cell { font-size: 10px; }
+  .ms-cell.revealed { font-size: 10px; }
+}
+
+/* 极窄屏进一步压缩 */
+@media (max-width: 420px) {
+  .menu-cards { gap: 8px; }
+  .game-card { padding: 12px 8px; }
+  .card-icon { font-size: 32px; }
+  .llk-cell { font-size: 13px; }
+  .g2048-cell { font-size: 15px !important; }
+}
+
+</style>
+</head>
+<body>
+  <!-- 开始菜单 -->
+  <div id="view-menu" class="view view-menu">
+    <div class="menu-wrap">
+      <h1 class="menu-title">🎮 小游戏合集</h1>
+      <p class="menu-subtitle">选择一款游戏开始游玩吧！</p>
+      <div class="menu-cards">
+        <button class="game-card" data-game="sudoku">
+          <span class="card-icon">🧩</span>
+          <span class="card-name">数独</span>
+          <span class="card-desc">标准数独 · 高难挑战</span>
+        </button>
+        <button class="game-card" data-game="lianliankan">
+          <span class="card-icon">🐶</span>
+          <span class="card-name">连连看</span>
+          <span class="card-desc">经典连线 · 眼力考验</span>
+        </button>
+        <button class="game-card" data-game="game2048">
+          <span class="card-icon">🔢</span>
+          <span class="card-name">2048</span>
+          <span class="card-desc">滑动合并 · 冲击8192</span>
+        </button>
+        <button class="game-card" data-game="minesweeper">
+          <span class="card-icon">💣</span>
+          <span class="card-name">扫雷</span>
+          <span class="card-desc">三档难度 · 智勇双全</span>
+        </button>
+      </div>
+      <div class="menu-stats">
+        <span id="stat-sudoku">数独 · 9×9 专家</span>
+        <span id="stat-lianliankan">连连看 · 最佳 —</span>
+        <span id="stat-game2048">2048 · 最高 0</span>
+        <span id="stat-minesweeper">扫雷 · 初级 —</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏视图容器 -->
+  <div id="view-game" class="view view-game" style="display:none;">
+    <header class="game-header">
+      <button id="btn-back" class="btn-back">⬅ 返回菜单</button>
+      <h2 id="game-title" class="game-title"></h2>
+      <div class="header-spacer"></div>
+    </header>
+    <div id="game-root" class="game-root"></div>
+  </div>
+
+  <!-- 通用弹窗 -->
+  <div id="modal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <div id="modal-icon" class="modal-icon"></div>
+      <div id="modal-title" class="modal-title"></div>
+      <div id="modal-message" class="modal-message"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <script>
+/* =========================================================
+ * app.js — 公共模块：视图切换、音效、存储、弹窗、游戏注册
+ * ========================================================= */
+(function () {
+  'use strict';
+
+  /* ---------- 存储助手（localStorage 安全封装） ---------- */
+  const Store = {
+    get(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw === null) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        return fallback;
+      }
+    },
+    set(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) { /* 忽略配额/隐私模式错误 */ }
+    }
+  };
+
+  /* ---------- 音效（Web Audio 合成，无外部文件） ---------- */
+  const Sfx = {
+    ctx: null,
+    muted: false,
+    ensure() {
+      if (!this.ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) this.ctx = new AC();
+      }
+      if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      return this.ctx;
+    },
+    tone(freq, dur, type, vol, when, slideTo) {
+      const ctx = this.ensure();
+      if (!ctx || this.muted) return;
+      const t0 = ctx.currentTime + (when || 0);
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, t0);
+      if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+      gain.gain.setValueAtTime(vol || 0.12, t0);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.02);
+    },
+    click() { this.tone(660, 0.06, 'sine', 0.08); },
+    select() { this.tone(880, 0.08, 'triangle', 0.1); },
+    pop() { this.tone(520, 0.07, 'triangle', 0.1, 0, 780); },
+    match() { this.tone(700, 0.1, 'triangle', 0.12); this.tone(1050, 0.12, 'sine', 0.08, 0.04); },
+    merge() { this.tone(440, 0.09, 'square', 0.06, 0, 660); },
+    reveal() { this.tone(300, 0.05, 'sine', 0.06); },
+    flag() { this.tone(500, 0.07, 'triangle', 0.08); },
+    boom() { this.tone(180, 0.5, 'sawtooth', 0.18, 0, 60); },
+    wrong() { this.tone(240, 0.14, 'square', 0.06, 0, 160); },
+    win() { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, 0.18, 'triangle', 0.12, i * 0.12)); },
+    lose() { [400, 320, 250, 180].forEach((f, i) => this.tone(f, 0.2, 'triangle', 0.12, i * 0.13)); },
+    task() { [784, 988].forEach((f, i) => this.tone(f, 0.12, 'triangle', 0.1, i * 0.08)); }
+  };
+
+  /* ---------- 通用弹窗 ---------- */
+  let modalResolve = null;
+  let modalCancelable = false;
+
+  function showModal(opts) {
+    const overlay = document.getElementById('modal');
+    document.getElementById('modal-icon').textContent = opts.icon || '🎮';
+    document.getElementById('modal-title').textContent = opts.title || '';
+    document.getElementById('modal-message').textContent = opts.message || '';
+    const actions = document.getElementById('modal-actions');
+    actions.innerHTML = '';
+    const buttons = opts.buttons || [{ label: '确定', value: 'ok', primary: true }];
+    buttons.forEach(b => {
+      const btn = document.createElement('button');
+      btn.className = 'btn' + (b.primary ? '' : ' ghost');
+      btn.textContent = b.label;
+      btn.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        if (modalResolve) { const r = modalResolve; modalResolve = null; r(b.value); }
+      });
+      actions.appendChild(btn);
+    });
+    // 结果类弹窗默认不可取消（必须点按钮），防止 Esc 关闭后游戏锁死
+    modalCancelable = opts.cancelable === true;
+    overlay.style.display = 'flex';
+    return new Promise(resolve => { modalResolve = resolve; });
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    if (modalResolve) { const r = modalResolve; modalResolve = null; r(null); }
+  }
+
+  /* ---------- 视图切换 ---------- */
+  const games = {}; // name -> { title, mount, unmount }
+
+  function registerGame(name, def) {
+    games[name] = def;
+  }
+
+  let currentGame = null;
+
+  function showMenu() {
+    if (currentGame && games[currentGame].unmount) games[currentGame].unmount();
+    currentGame = null;
+    document.getElementById('view-game').style.display = 'none';
+    // 必须用 flex（与 CSS 一致），否则覆盖掉居中对齐
+    document.getElementById('view-menu').style.display = 'flex';
+    refreshMenuStats();
+  }
+
+  function showGame(name) {
+    const def = games[name];
+    if (!def) return;
+    if (currentGame && games[currentGame].unmount) games[currentGame].unmount();
+    currentGame = name;
+    document.getElementById('view-menu').style.display = 'none';
+    document.getElementById('view-game').style.display = 'block';
+    document.getElementById('game-title').textContent = def.title;
+    // 通过 data 属性区分当前游戏，绝不修改容器的 id（否则再次进入会找不到容器）
+    const root = document.getElementById('game-root');
+    root.innerHTML = '';
+    root.dataset.game = name;
+    if (def.mount) def.mount(root);
+  }
+
+  function refreshMenuStats() {
+    const set = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+    // 数独各档最快纪录（展示 9×9 专家）
+    const sd = Store.get('mini.sudoku.best', {});
+    set('stat-sudoku', '数独 · 9×9 专家 ' + (sd.expert9 ? sd.expert9 + 's' : '—'));
+    // 连连看最佳时间
+    const llk = Store.get('mini.llk.best', null);
+    set('stat-lianliankan', llk ? '连连看 · 最佳 ' + llk + 's' : '连连看 · 最佳 —');
+    // 2048 最高分
+    const g2 = Store.get('mini.2048.best', 0);
+    set('stat-game2048', '2048 · 最高 ' + g2);
+    // 扫雷各难度纪录（展示初级）
+    const ms = Store.get('mini.ms.best', {});
+    set('stat-minesweeper', '扫雷 · 初级 ' + (ms.easy ? ms.easy + 's' : '—'));
+  }
+
+  /* ---------- 初始化 ---------- */
+  // 全局错误提示：移动端排查用，出错时在页面顶部显示红条
+  function showErrorBar(msg) {
+    if (document.getElementById('mini-error-bar')) return;
+    const bar = document.createElement('div');
+    bar.id = 'mini-error-bar';
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e04f3a;color:#fff;' +
+      'padding:10px 14px;font-size:13px;line-height:1.5;z-index:99999;white-space:pre-wrap;';
+    bar.textContent = '⚠️ ' + msg;
+    document.body.appendChild(bar);
+  }
+  window.addEventListener('error', (e) => {
+    showErrorBar('脚本错误：' + (e.message || e.type) + (e.lineno ? '（第 ' + e.lineno + ' 行）' : ''));
+  }, true);
+  window.addEventListener('unhandledrejection', (e) => {
+    const r = e.reason;
+    showErrorBar('未处理错误：' + ((r && r.message) || r));
+  });
+
+  function init() {
+    document.getElementById('btn-back').addEventListener('click', () => { Sfx.click(); showMenu(); });
+    document.querySelectorAll('.game-card').forEach(card => {
+      card.addEventListener('click', () => {
+        Sfx.select();
+        showGame(card.dataset.game);
+      });
+    });
+    // 点击弹窗遮罩空白处关闭（仅可取消的弹窗）
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal' && modalCancelable) closeModal();
+    });
+    // 键盘 Esc 关闭弹窗（仅可取消的弹窗）
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalCancelable) closeModal();
+    });
+    refreshMenuStats();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  /* 暴露公共 API */
+  window.Mini = { Store, Sfx, showModal, registerGame, showMenu, showGame };
+})();
+
+</script>
+  <script>
+/* =========================================================
+ * sudoku.js — 数独（9×9 专家/大师 · 12×12 大师 · 16×16 极限）
+ * 结构：纯逻辑（可 node 测试）+ UI 层（浏览器）
+ * ========================================================= */
+(function (global, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    global.SudokuGame = factory();
+  }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const isNode = typeof document === 'undefined';
+
+  /* ==================== 配置 ==================== */
+  const DIFFS = {
+    expert9:   { label: '9×9 专家', size: 9,  clues: 30 },
+    master9:   { label: '9×9 大师', size: 9,  clues: 24 },
+    master12:  { label: '12×12 大师', size: 12, clues: 48 },
+    extreme16: { label: '16×16 极限', size: 16, clues: 88 }
+  };
+  const DIFF_ORDER = ['expert9', 'master9', 'master12', 'extreme16'];
+
+  /* ==================== 纯逻辑 ==================== */
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // 宫的尺寸 [行数, 列数]
+  function boxDims(size) {
+    if (size === 9) return [3, 3];
+    if (size === 12) return [3, 4];
+    if (size === 16) return [4, 4];
+    const s = Math.round(Math.sqrt(size));
+    return [s, size / s];
+  }
+
+  // (r,c) 处的候选数字
+  function candidates(board, r, c) {
+    const size = board.length;
+    const [bh, bw] = boxDims(size);
+    const used = new Set();
+    for (let i = 0; i < size; i++) {
+      if (board[r][i]) used.add(board[r][i]);
+      if (board[i][c]) used.add(board[i][c]);
+    }
+    const br = Math.floor(r / bh) * bh, bc = Math.floor(c / bw) * bw;
+    for (let i = br; i < br + bh; i++)
+      for (let j = bc; j < bc + bw; j++)
+        if (board[i][j]) used.add(board[i][j]);
+    const list = [];
+    for (let v = 1; v <= size; v++) if (!used.has(v)) list.push(v);
+    return list;
+  }
+
+  // 生成一个随机完整终局
+  function randomFill(size) {
+    const board = Array.from({ length: size }, () => Array(size).fill(0));
+    (function fill() {
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (board[r][c] !== 0) continue;
+          const cands = shuffle(candidates(board, r, c));
+          for (const v of cands) {
+            board[r][c] = v;
+            if (fill()) return true;
+            board[r][c] = 0;
+          }
+          return false;
+        }
+      }
+      return true;
+    })();
+    return board;
+  }
+
+  // 位掩码求解器（内部状态：行/列/宫掩码，候选计算 O(1)）
+  // MRV 回溯数解，最多数到 maxCount；maxNodes 为节点预算（超预算返回 -1）
+  function solveCount(board, maxCount, maxNodes) {
+    const size = board.length;
+    const [bh, bw] = boxDims(size);
+    const full = (1 << size) - 1;
+    const rowM = new Array(size).fill(0), colM = new Array(size).fill(0), boxM = new Array(size).fill(0);
+    const boxOf = (r, c) => Math.floor(r / bh) * bw + Math.floor(c / bw);
+    for (let r = 0; r < size; r++)
+      for (let c = 0; c < size; c++) {
+        const v = board[r][c];
+        if (!v) continue;
+        const bit = 1 << (v - 1);
+        rowM[r] |= bit; colM[c] |= bit; boxM[boxOf(r, c)] |= bit;
+      }
+    const limit = maxNodes || Infinity;
+    let count = 0, nodes = 0, aborted = false;
+    (function solve() {
+      if (aborted) return;
+      if (++nodes > limit) { aborted = true; return; }
+      let best = null, bestFree = 0, bestCnt = Infinity;
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (board[r][c] !== 0) continue;
+          const free = full & ~(rowM[r] | colM[c] | boxM[boxOf(r, c)]);
+          if (!free) return;                       // 无候选，死路
+          const cnt = popcount(free);
+          if (cnt < bestCnt) { best = [r, c]; bestFree = free; bestCnt = cnt; }
+          if (cnt === 1) break;
+        }
+        if (bestCnt === 1) break;
+      }
+      if (!best) { count++; return; }              // 找到一组解
+      const [r, c] = best, b = boxOf(r, c);
+      for (let free = bestFree; free; free &= free - 1) {
+        const bit = free & -free;
+        const v = 31 - Math.clz32(bit) + 1;
+        board[r][c] = v;
+        rowM[r] |= bit; colM[c] |= bit; boxM[b] |= bit;
+        solve();
+        board[r][c] = 0;
+        rowM[r] &= ~bit; colM[c] &= ~bit; boxM[b] &= ~bit;
+        if (aborted || count >= maxCount) return;
+      }
+    })();
+    return aborted ? -1 : count;
+  }
+
+  // 位掩码版：收集解列表（最多 maxCount 个完整解；maxNodes 为节点预算，超预算返回 null）
+  function solveList(board, maxCount, maxNodes) {
+    const size = board.length;
+    const [bh, bw] = boxDims(size);
+    const full = (1 << size) - 1;
+    const rowM = new Array(size).fill(0), colM = new Array(size).fill(0), boxM = new Array(size).fill(0);
+    const boxOf = (r, c) => Math.floor(r / bh) * bw + Math.floor(c / bw);
+    for (let r = 0; r < size; r++)
+      for (let c = 0; c < size; c++) {
+        const v = board[r][c];
+        if (!v) continue;
+        const bit = 1 << (v - 1);
+        rowM[r] |= bit; colM[c] |= bit; boxM[boxOf(r, c)] |= bit;
+      }
+    const limit = maxNodes || Infinity;
+    const solutions = [];
+    let nodes = 0, aborted = false;
+    (function solve() {
+      if (aborted || solutions.length >= maxCount) return;
+      if (++nodes > limit) { aborted = true; return; }
+      let best = null, bestFree = 0, bestCnt = Infinity;
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (board[r][c] !== 0) continue;
+          const free = full & ~(rowM[r] | colM[c] | boxM[boxOf(r, c)]);
+          if (!free) return;
+          const cnt = popcount(free);
+          if (cnt < bestCnt) { best = [r, c]; bestFree = free; bestCnt = cnt; }
+          if (cnt === 1) break;
+        }
+        if (bestCnt === 1) break;
+      }
+      if (!best) { solutions.push(board.map(row => row.slice())); return; }
+      const [r, c] = best, b = boxOf(r, c);
+      for (let free = bestFree; free; free &= free - 1) {
+        const bit = free & -free;
+        const v = 31 - Math.clz32(bit) + 1;
+        board[r][c] = v;
+        rowM[r] |= bit; colM[c] |= bit; boxM[b] |= bit;
+        solve();
+        board[r][c] = 0;
+        rowM[r] &= ~bit; colM[c] &= ~bit; boxM[b] &= ~bit;
+        if (aborted || solutions.length >= maxCount) return;
+      }
+    })();
+    return aborted ? null : solutions;
+  }
+
+  // 位计数（size ≤ 16）
+  function popcount(x) {
+    let n = 0;
+    while (x) { x &= x - 1; n++; }
+    return n;
+  }
+
+  // 生成谜题：终局 → 随机挖空 → 唯一解验证
+  // 12×12/16×16 用“多解差异回填”：逐个验证太慢，改为批量挖空后回填差异格，
+  // 求解带节点预算，超预算时继续回填提高约束（提示数会略高于目标，仍保证唯一解）
+  function generatePuzzle(size, targetClues) {
+    const solution = randomFill(size);
+    const puzzle = solution.map(row => row.slice());
+    const total = size * size;
+    const allCells = [];
+    for (let r = 0; r < size; r++)
+      for (let c = 0; c < size; c++) allCells.push([r, c]);
+
+    if (size <= 12) {
+      // 9×9 / 12×12：逐个挖空并验证唯一解（位掩码求解极快）
+      let clues = total;
+      for (const [r, c] of shuffle(allCells)) {
+        if (clues <= targetClues) break;
+        const saved = puzzle[r][c];
+        puzzle[r][c] = 0;
+        if (solveCount(puzzle, 2) !== 1) puzzle[r][c] = saved;
+        else clues--;
+      }
+      return { puzzle, solution };
+    }
+
+    // 大尺寸：批量挖空 → 小步长差异回填，提示数缓慢上升直到唯一解
+    let clues = total;
+    for (const [r, c] of shuffle(allCells)) {
+      if (clues <= targetClues) break;
+      puzzle[r][c] = 0;
+      clues--;
+    }
+    const BUDGET = 2000000;    // 单轮求解节点预算（位掩码极快）
+    const confirmClues = size === 12 ? 80 : 118;   // 12×12 约束弱，可在更低提示数确认
+    const countClues = () => {
+      let n = 0;
+      for (const row of puzzle) for (const v of row) if (v) n++;
+      return n;
+    };
+    const refillSome = (values) => {
+      const empties = [];
+      for (let r = 0; r < size; r++)
+        for (let c = 0; c < size; c++)
+          if (puzzle[r][c] === 0) empties.push([r, c, values[r][c]]);
+      shuffle(empties);
+      const k = Math.max(4, Math.ceil(empties.length * 0.12));
+      for (let i = 0; i < k && i < empties.length; i++) {
+        const [r, c, v] = empties[i];
+        puzzle[r][c] = v;
+      }
+    };
+    let guard = 0;
+    while (guard++ < 200) {
+      if (countClues() >= 118 && solveCount(puzzle, 2, BUDGET) === 1) break;  // 唯一解确认
+      const sols = solveList(puzzle, 2, BUDGET);
+      if (sols && sols.length >= 2) {
+        // 小步长回填两解的差异格（每次约 10%），让提示数平缓上升
+        const diffs = [];
+        for (let r = 0; r < size; r++)
+          for (let c = 0; c < size; c++)
+            if (puzzle[r][c] === 0 && sols[0][r][c] !== sols[1][r][c])
+              diffs.push([r, c, sols[0][r][c]]);
+        shuffle(diffs);
+        const k = Math.max(1, Math.ceil(diffs.length * 0.1));
+        for (let i = 0; i < k && i < diffs.length; i++) {
+          const [r, c, v] = diffs[i];
+          puzzle[r][c] = v;
+        }
+        continue;
+      }
+      // 只找到 1 解或超预算：提示数仍不足，回填一批空格提高约束
+      refillSome(sols ? sols[0] : solution);
+    }
+    const finalSol = solveList(puzzle, 1, BUDGET) || [solution];
+    return { puzzle, solution: finalSol[0] || solution };
+  }
+
+  // 检查 v 填入 (r,c) 是否与盘面冲突（不含 (r,c) 自身）
+  function checkValue(board, r, c, v) {
+    const size = board.length;
+    const [bh, bw] = boxDims(size);
+    for (let i = 0; i < size; i++) {
+      if (i !== c && board[r][i] === v) return false;
+      if (i !== r && board[i][c] === v) return false;
+    }
+    const br = Math.floor(r / bh) * bh, bc = Math.floor(c / bw) * bw;
+    for (let i = br; i < br + bh; i++)
+      for (let j = bc; j < bc + bw; j++)
+        if ((i !== r || j !== c) && board[i][j] === v) return false;
+    return true;
+  }
+
+  function isSolved(board) {
+    const size = board.length;
+    for (let r = 0; r < size; r++)
+      for (let c = 0; c < size; c++) {
+        const v = board[r][c];
+        if (!v || !checkValue(board, r, c, v)) return false;
+      }
+    return true;
+  }
+
+  const core = {
+    DIFFS, DIFF_ORDER,
+    boxDims, candidates, randomFill, solveCount, solveList,
+    generatePuzzle, checkValue, isSolved
+  };
+
+  /* ==================== UI 层 ==================== */
+  if (isNode) return core;
+
+  const { Store, Sfx, showModal, registerGame } = window.Mini;
+
+  let state = null;
+  let timerId = null;
+  let boardEl = null, numpadEl = null;
+  let timeEl = null, noteBtnEl = null, diffBtns = [];
+
+  function renderBoard() {
+    const size = state.size;
+    const [bh, bw] = core.boxDims(size);
+    boardEl.style.gridTemplateColumns = 'repeat(' + size + ', 1fr)';
+    boardEl.style.maxWidth = size === 9 ? '560px' : (size === 12 ? '580px' : '660px');
+    boardEl.dataset.size = size;
+    boardEl.innerHTML = '';
+    const sel = state.selected;
+    const selVal = sel ? state.board[sel[0]][sel[1]] : 0;
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        const cell = document.createElement('div');
+        const cls = ['sd-cell'];
+        if (r % bh === 0) cls.push('box-top');
+        if (c % bw === 0) cls.push('box-left');
+        if (sel && sel[0] === r && sel[1] === c) cls.push('selected');
+        // 点击高亮：同行/同列十字线 + 相同数字
+        if (sel && (r === sel[0] || c === sel[1])) cls.push('hl-cross');
+        if (sel && selVal && state.board[r][c] === selVal) cls.push('hl-same');
+        if (state.given[r][c]) cls.push('given');
+        else if (state.errors[r][c]) cls.push('err');
+        cell.className = cls.join(' ');
+        cell.dataset.r = r; cell.dataset.c = c;
+        // 内容：数字 / 笔记
+        const v = state.board[r][c];
+        if (v) {
+          cell.textContent = v;
+        } else if (state.notes[r][c].length) {
+          const nw = Math.ceil(Math.sqrt(size));
+          cell.style.display = 'grid';
+          cell.style.gridTemplateColumns = 'repeat(' + nw + ', 1fr)';
+          const nums = [];
+          for (let n = 1; n <= size; n++) nums.push(n);
+          nums.forEach(n => {
+            const span = document.createElement('span');
+            span.className = 'sd-note' + (state.notes[r][c].includes(n) ? ' on' : '');
+            span.textContent = n;
+            cell.appendChild(span);
+          });
+        }
+        cell.addEventListener('click', () => onCellClick(r, c));
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  // 数字 n 是否已全部正确填入（基于答案判定，用于键盘禁用）
+  function isNumComplete(n) {
+    const size = state.size;
+    for (let r = 0; r < size; r++)
+      for (let c = 0; c < size; c++)
+        if (state.solution[r][c] === n && state.board[r][c] !== n) return false;
+    return true;
+  }
+
+  function renderNumpad() {
+    numpadEl.innerHTML = '';
+    numpadEl.style.gridTemplateColumns = 'repeat(' + Math.min(state.size, 9) + ', 1fr)';
+    for (let n = 1; n <= state.size; n++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn ghost sd-key';
+      btn.textContent = n;
+      // 该数字已全部正确填入 → 禁用置灰
+      if (isNumComplete(n)) btn.disabled = true;
+      btn.addEventListener('click', () => { Sfx.click(); inputNumber(n); });
+      numpadEl.appendChild(btn);
+    }
+  }
+
+  function renderPanel() {
+    diffBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.diff === state.diffKey));
+    if (timeEl) timeEl.textContent = '⏱ ' + state.time + 's';
+  }
+
+  function onCellClick(r, c) {
+    if (!state) return;
+    state.selected = [r, c];
+    renderBoard();
+    Sfx.click();
+  }
+
+  function inputNumber(n) {
+    if (!state || !state.selected) return;
+    const [r, c] = state.selected;
+    if (state.given[r][c]) return;
+    if (state.noteMode) {
+      // 笔记切换
+      const arr = state.notes[r][c];
+      const i = arr.indexOf(n);
+      if (i >= 0) arr.splice(i, 1); else arr.push(n);
+      state.board[r][c] = 0;
+      state.errors[r][c] = false;
+      Sfx.click();
+    } else {
+      const ok = core.checkValue(state.board, r, c, n);
+      state.board[r][c] = n;
+      state.errors[r][c] = !ok;
+      state.notes[r][c] = [];
+      if (!state.started) { state.started = true; startTimer(); }
+      if (!ok) { Sfx.wrong(); } else { Sfx.pop(); }
+      if (core.isSolved(state.board)) { win(); return; }
+    }
+    renderBoard();
+    renderNumpad();   // 刷新键盘禁用状态
+  }
+
+  function eraseCell() {
+    if (!state || !state.selected) return;
+    const [r, c] = state.selected;
+    if (state.given[r][c]) return;
+    state.board[r][c] = 0;
+    state.notes[r][c] = [];
+    state.errors[r][c] = false;
+    Sfx.click();
+    renderBoard();
+    renderNumpad();   // 擦除后恢复键盘可用状态
+  }
+
+  function onKey(e) {
+    if (!state || state.over) return;
+    const sel = state.selected;
+    if (sel) {
+      const r = sel[0], c = sel[1];
+      const size = state.size;
+      // 方向键移动选中格
+      const dirs = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+      const d = dirs[e.key];
+      if (d) {
+        e.preventDefault();
+        const nr = Math.min(size - 1, Math.max(0, r + d[0]));
+        const nc = Math.min(size - 1, Math.max(0, c + d[1]));
+        state.selected = [nr, nc];
+        renderBoard();
+        return;
+      }
+      // 数字键（已填完的数字与按钮一致地忽略）
+      const n = parseInt(e.key, 10);
+      if (n >= 1 && n <= Math.min(size, 9)) {
+        e.preventDefault();
+        if (!isNumComplete(n)) inputNumber(n);
+        return;
+      }
+    }
+    // 笔记模式切换 / 橡皮擦
+    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); toggleNoteMode(); }
+    if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); eraseCell(); }
+  }
+
+  function toggleNoteMode() {
+    if (!state) return;
+    state.noteMode = !state.noteMode;
+    const btn = noteBtnEl;
+    if (btn) {
+      btn.classList.toggle('active', state.noteMode);
+      btn.textContent = state.noteMode ? '✏️ 笔记（开）' : '✏️ 笔记（关）';
+    }
+    Sfx.click();
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    timerId = setInterval(() => {
+      if (!state || state.over) return;
+      state.time++;
+      if (timeEl) timeEl.textContent = '⏱ ' + state.time + 's';
+    }, 1000);
+  }
+
+  async function win() {
+    if (state.over) return;
+    state.over = true;
+    clearInterval(timerId);
+    Sfx.win();
+    const best = Store.get('mini.sudoku.best', {});
+    const key = state.diffKey;
+    const isRecord = !best[key] || state.time < best[key];
+    if (isRecord) {
+      best[key] = state.time;
+      Store.set('mini.sudoku.best', best);
+    }
+    const res = await showModal({
+      icon: '🏆', title: '解题成功！',
+      message: DIFFS[key].label + ' 用时 ' + state.time + ' 秒' + (isRecord ? '\n🎉 新纪录！' : ''),
+      buttons: [
+        { label: '再来一局', value: 'again', primary: true },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'again') startGame(state.diffKey);
+    else window.Mini.showMenu();
+  }
+
+  // 生成谜题（16×16 较慢，先显示生成提示再生成）
+  function startGame(diffKey) {
+    const diff = DIFFS[diffKey];
+    clearInterval(timerId);
+    state = {
+      diffKey, size: diff.size,
+      puzzle: null, solution: null, board: null, given: null,
+      notes: null, errors: null,
+      selected: null, noteMode: false,
+      time: 0, started: false, over: false, generating: true
+    };
+    renderPanel();
+    boardEl.innerHTML = '<div class="sd-generating">🕐 正在生成谜题…</div>';
+    boardEl.style.gridTemplateColumns = '1fr';
+    numpadEl.innerHTML = '';
+    setTimeout(() => {
+      if (!state || state.diffKey !== diffKey) return;
+      const { puzzle, solution } = core.generatePuzzle(diff.size, diff.clues);
+      if (!state || state.diffKey !== diffKey) return;
+      state.puzzle = puzzle;
+      state.solution = solution;
+      state.board = puzzle.map(row => row.slice());
+      state.given = puzzle.map(row => row.map(v => v !== 0));
+      state.notes = puzzle.map(row => row.map(() => []));
+      state.errors = puzzle.map(row => row.map(() => false));
+      state.generating = false;
+      renderNumpad();
+      renderBoard();
+      renderPanel();
+    }, 30);
+  }
+
+  function mount(root) {
+    root.innerHTML =
+      '<div class="panel">' +
+        DIFF_ORDER.map(k =>
+          '<button class="btn ghost sd-diff-btn" data-diff="' + k + '">' + DIFFS[k].label + '</button>'
+        ).join('') +
+      '</div>' +
+      '<div class="panel">' +
+        '<span class="pill good" id="sd-time">⏱ 0s</span>' +
+        '<button class="btn ghost" id="sd-note-btn">✏️ 笔记（关）</button>' +
+        '<button class="btn ghost" id="sd-erase">🧽 擦除</button>' +
+        '<button class="btn ghost" id="sd-restart">🔄 新谜题</button>' +
+      '</div>' +
+      '<div class="sd-board" id="sd-board"></div>' +
+      '<div class="sd-numpad" id="sd-numpad"></div>' +
+      '<div class="panel" style="font-size:13px;font-weight:500;color:#8a97a8;">' +
+        '点击格子选中，数字键/键盘填入 · N 切换笔记模式 · 填错红字提示 · 方向键移动' +
+      '</div>';
+    boardEl = root.querySelector('#sd-board');
+    numpadEl = root.querySelector('#sd-numpad');
+    timeEl = root.querySelector('#sd-time');
+    diffBtns = Array.from(root.querySelectorAll('.sd-diff-btn'));
+    diffBtns.forEach(btn => btn.addEventListener('click', () => { Sfx.click(); startGame(btn.dataset.diff); }));
+    const noteBtn = root.querySelector('#sd-note-btn');
+    noteBtnEl = noteBtn;
+    if (noteBtn) noteBtn.addEventListener('click', toggleNoteMode);
+    const eraseBtn = root.querySelector('#sd-erase');
+    if (eraseBtn) eraseBtn.addEventListener('click', eraseCell);
+    const restartBtn = root.querySelector('#sd-restart');
+    if (restartBtn) restartBtn.addEventListener('click', () => { Sfx.click(); startGame(state ? state.diffKey : 'expert9'); });
+    document.addEventListener('keydown', onKey);
+    startGame('expert9');
+  }
+
+  function unmount() {
+    clearInterval(timerId);
+    document.removeEventListener('keydown', onKey);
+    state = null;
+  }
+
+  core.mount = mount;
+  core.unmount = unmount;
+
+  registerGame('sudoku', {
+    title: '🧩 数独',
+    mount: root => mount(root),
+    unmount
+  });
+
+  return core;
+});
+
+</script>
+  <script>
+/* =========================================================
+ * lianliankan.js — 连连看（经典规则 ≤2 拐弯 · 动物 Emoji）
+ * 结构：纯逻辑（可 node 测试）+ UI 层（浏览器）
+ * ========================================================= */
+(function (global, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    global.LianliankanGame = factory();
+  }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const isNode = typeof document === 'undefined';
+
+  /* ==================== 配置 ==================== */
+  const ROWS = 12, COLS = 10;       // 内部图案区
+  const NUM_TYPES = 12;
+  const TIME_LIMIT = 180;           // 倒计时（秒）
+  const HINT_MAX = 5, SHUFFLE_MAX = 3;
+  const ANIMALS = ['🐶','🐱','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸'];
+
+  /* ==================== 纯逻辑 ==================== */
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // 逻辑网格：(ROWS+2) × (COLS+2)，外圈 -1 表示空路径
+  function createBoard(rows, cols, numTypes) {
+    const R = rows + 2, C = cols + 2;
+    const board = Array.from({ length: R }, () => Array(C).fill(-1));
+    const total = rows * cols;
+    const tiles = [];
+    const pairs = total / 2;
+    const perType = Math.floor(pairs / numTypes);
+    for (let t = 0; t < numTypes; t++) {
+      for (let k = 0; k < perType * 2; k++) tiles.push(t);
+    }
+    // 若有多余位置，用随机类型补足（保证 tiles 数量 == total）
+    while (tiles.length < total) tiles.push(Math.floor(Math.random() * numTypes));
+    const shuffled = shuffle(tiles);
+    const positions = [];
+    for (let r = 1; r <= rows; r++)
+      for (let c = 1; c <= cols; c++) positions.push([r, c]);
+    shuffle(positions).forEach(([r, c], i) => { board[r][c] = shuffled[i]; });
+    return board;
+  }
+
+  // 同行/同列两点之间（不含端点）是否全空
+  function lineClear(board, r1, c1, r2, c2) {
+    if (r1 === r2) {
+      const a = Math.min(c1, c2), b = Math.max(c1, c2);
+      for (let c = a + 1; c < b; c++) if (board[r1][c] >= 0) return false;
+      return true;
+    }
+    if (c1 === c2) {
+      const a = Math.min(r1, r2), b = Math.max(r1, r2);
+      for (let r = a + 1; r < b; r++) if (board[r][c1] >= 0) return false;
+      return true;
+    }
+    return false;
+  }
+
+  // 求 a→b 的连接路径（≤2 拐弯），返回路径点序列或 null
+  function getPath(board, a, b) {
+    const r1 = a[0], c1 = a[1], r2 = b[0], c2 = b[1];
+    if (r1 === r2 && c1 === c2) return null;
+    const t1 = board[r1][c1];
+    if (t1 < 0 || t1 !== board[r2][c2]) return null;
+    const R = board.length, C = board[0].length;
+    // 0 拐
+    if (r1 === r2 && lineClear(board, r1, c1, r1, c2)) return [[r1, c1], [r2, c2]];
+    if (c1 === c2 && lineClear(board, r1, c1, r2, c1)) return [[r1, c1], [r2, c2]];
+    // 1 拐：角 (r1,c2)
+    if (board[r1][c2] < 0 && lineClear(board, r1, c1, r1, c2) && lineClear(board, r1, c2, r2, c2))
+      return [[r1, c1], [r1, c2], [r2, c2]];
+    // 1 拐：角 (r2,c1)
+    if (board[r2][c1] < 0 && lineClear(board, r1, c1, r2, c1) && lineClear(board, r2, c1, r2, c2))
+      return [[r1, c1], [r2, c1], [r2, c2]];
+    // 2 拐：垂直双角 (r1,c) → (r2,c)
+    for (let c = 0; c < C; c++) {
+      if (board[r1][c] < 0 && board[r2][c] < 0 &&
+          lineClear(board, r1, c1, r1, c) && lineClear(board, r1, c, r2, c) && lineClear(board, r2, c, r2, c2))
+        return [[r1, c1], [r1, c], [r2, c], [r2, c2]];
+    }
+    // 2 拐：水平双角 (r,c1) → (r,c2)
+    for (let r = 0; r < R; r++) {
+      if (board[r][c1] < 0 && board[r][c2] < 0 &&
+          lineClear(board, r1, c1, r, c1) && lineClear(board, r, c1, r, c2) && lineClear(board, r, c2, r2, c2))
+        return [[r1, c1], [r, c1], [r, c2], [r2, c2]];
+    }
+    return null;
+  }
+
+  function canConnect(board, a, b) {
+    return getPath(board, a, b) !== null;
+  }
+
+  // 找任意一对可消除的
+  function findPair(board) {
+    const R = board.length, C = board[0].length;
+    const cells = [];
+    for (let r = 0; r < R; r++)
+      for (let c = 0; c < C; c++)
+        if (board[r][c] >= 0) cells.push([r, c]);
+    for (let i = 0; i < cells.length; i++) {
+      for (let j = i + 1; j < cells.length; j++) {
+        const a = cells[i], b = cells[j];
+        if (board[a[0]][a[1]] === board[b[0]][b[1]] && getPath(board, a, b)) {
+          return [a, b, getPath(board, a, b)];
+        }
+      }
+    }
+    return null;
+  }
+
+  function remainingCount(board) {
+    let n = 0;
+    for (const row of board) for (const v of row) if (v >= 0) n++;
+    return n;
+  }
+
+  // 洗牌：重排剩余图案，尽量保证仍可解
+  function shuffleRemaining(board) {
+    const tiles = [];
+    for (const row of board) for (const v of row) if (v >= 0) tiles.push(v);
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const s = shuffle(tiles);
+      let k = 0;
+      for (let r = 0; r < board.length; r++)
+        for (let c = 0; c < board[0].length; c++)
+          if (board[r][c] >= 0) board[r][c] = s[k++];
+      if (findPair(board)) return;
+    }
+  }
+
+  const core = {
+    ROWS, COLS, NUM_TYPES, TIME_LIMIT, HINT_MAX, SHUFFLE_MAX, ANIMALS,
+    createBoard, getPath, canConnect, findPair, remainingCount, shuffleRemaining
+  };
+
+  /* ==================== UI 层 ==================== */
+  if (isNode) return core;
+
+  const { Store, Sfx, showModal, registerGame } = window.Mini;
+
+  let state = null;
+  let timerId = null;
+  let boardEl = null, wrapEl = null, svgEl = null;
+
+  function getCell(r, c) {
+    return boardEl.querySelector('.llk-cell[data-r="' + r + '"][data-c="' + c + '"]');
+  }
+
+  // 棋盘格子的尺寸与坐标（与 CSS 的 padding/gap 一致）
+  function cellGeom() {
+    const rect = boardEl.getBoundingClientRect();
+    const C = state.board[0].length, R = state.board.length;
+    const pad = 10, gap = 6;
+    const cw = (rect.width - pad * 2 - gap * (C - 1)) / C;
+    const ch = (rect.height - pad * 2 - gap * (R - 1)) / R;
+    return { rect, C, R, pad, gap, cw, ch };
+  }
+
+  // 精致连线动画：SVG 折线逐段画出 → 淡出
+  function drawPath(path) {
+    const { rect, pad, gap, cw, ch } = cellGeom();
+    const pts = path.map(([r, c]) =>
+      [pad + c * (cw + gap) + cw / 2, pad + r * (ch + gap) + ch / 2]);
+    if (!svgEl) return;
+    svgEl.setAttribute('width', rect.width);
+    svgEl.setAttribute('height', rect.height);
+    svgEl.innerHTML = '';
+    const NS = 'http://www.w3.org/2000/svg';
+    const poly = document.createElementNS(NS, 'polyline');
+    poly.setAttribute('points', pts.map(p => p[0] + ',' + p[1]).join(' '));
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#5cb8ff');
+    poly.setAttribute('stroke-width', '4');
+    poly.setAttribute('stroke-linecap', 'round');
+    poly.setAttribute('stroke-linejoin', 'round');
+    let len = 0;
+    for (let i = 1; i < pts.length; i++)
+      len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    const dur = Math.min(420, 90 + len * 1.3);
+    poly.style.strokeDasharray = len;
+    poly.style.strokeDashoffset = len;
+    poly.style.filter = 'drop-shadow(0 0 4px #5cb8ff)';
+    svgEl.appendChild(poly);
+    void poly.getBoundingClientRect();   // 强制 reflow 后开始动画
+    poly.style.transition = 'stroke-dashoffset ' + dur + 'ms ease-out';
+    poly.style.strokeDashoffset = 0;
+    setTimeout(() => { poly.style.transition = 'opacity 200ms ease'; poly.style.opacity = 0; }, dur + 30);
+    setTimeout(() => { if (svgEl) svgEl.innerHTML = ''; }, dur + 260);
+  }
+
+  // 评价文字：路径拐弯数 + 连击结合（连击越高等级越高，上限 LEGENDARY）
+  function gradeFor(turns, combo) {
+    const NAMES = ['GOOD', 'PERFECT', 'WONDERFUL', 'AMAZING', 'UNBELIEVABLE', 'GODLIKE', 'LEGENDARY'];
+    let tier = turns === 0 ? 0 : (turns === 1 ? 1 : 2);
+    if (combo >= 16) tier = Math.max(tier, 6);
+    else if (combo >= 12) tier = Math.max(tier, 5);
+    else if (combo >= 8) tier = Math.max(tier, 4);
+    else if (combo >= 5) tier = Math.max(tier, 3);
+    else if (combo >= 3) tier = Math.max(tier, 2);
+    const cls = ['fx-good', 'fx-perfect', 'fx-wonderful', 'fx-amazing', 'fx-unbelievable', 'fx-godlike', 'fx-legendary'][tier];
+    return { text: NAMES[tier] + (combo >= 3 ? ' ×' + combo : ''), cls };
+  }
+
+  function showEval(turns, combo, a, b) {
+    const { pad, gap, cw, ch } = cellGeom();
+    const C = state.board[0].length;
+    const r = (a[0] + b[0]) / 2, c = (a[1] + b[1]) / 2;
+    const g = gradeFor(turns, combo);
+    const el = document.createElement('div');
+    el.className = 'fx-text ' + g.cls;
+    el.textContent = g.text;
+    el.style.left = (pad + c * (cw + gap) + cw / 2) + 'px';
+    el.style.top = (pad + r * (ch + gap) + ch / 2) + 'px';
+    // 挂到 wrapEl（与棋盘同位置但不会被 renderBoard 清空），保证停留完整播放
+    wrapEl.appendChild(el);
+    setTimeout(() => el.remove(), 1450);
+  }
+
+  // 错误提示：两格抖动 + 红边
+  function flashError(a, b) {
+    const elA = getCell(a[0], a[1]);
+    const elB = getCell(b[0], b[1]);
+    if (elA) elA.classList.add('shake');
+    if (elB) elB.classList.add('shake');
+    Sfx.wrong();
+    setTimeout(() => {
+      if (elA) elA.classList.remove('shake');
+      if (elB) elB.classList.remove('shake');
+    }, 420);
+  }
+
+  // 粒子碎裂：在格子中心迸发 emoji 与彩色碎片，让消除更醒目
+  function burstParticles(r, c, text) {
+    const { pad, gap, cw, ch } = cellGeom();
+    const cx = pad + c * (cw + gap) + cw / 2;
+    const cy = pad + r * (ch + gap) + ch / 2;
+    const COLORS = ['#ff9d5c', '#5cb8ff', '#e56aa8', '#ffd23e', '#6bcf7f', '#a85fd6'];
+    const n = 8;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('span');
+      p.className = 'llk-particle';
+      const ang = Math.random() * Math.PI * 2;
+      const dist = 22 + Math.random() * 38;
+      p.style.setProperty('--tx', Math.cos(ang) * dist + 'px');
+      p.style.setProperty('--ty', Math.sin(ang) * dist + 'px');
+      p.style.setProperty('--rot', (Math.random() * 280 - 140) + 'deg');
+      p.style.left = cx + 'px';
+      p.style.top = cy + 'px';
+      if (i % 2 === 0) {
+        p.textContent = text;
+        p.style.fontSize = '14px';
+      } else {
+        p.style.width = '8px';
+        p.style.height = '8px';
+        p.style.borderRadius = '50%';
+        p.style.background = COLORS[i % COLORS.length];
+      }
+      boardEl.appendChild(p);
+      setTimeout(() => p.remove(), 700);
+    }
+  }
+
+  function renderBoard() {
+    const R = state.board.length, C = state.board[0].length;
+    boardEl.style.gridTemplateColumns = 'repeat(' + C + ', 1fr)';
+    boardEl.innerHTML = '';
+    for (let r = 0; r < R; r++) {
+      for (let c = 0; c < C; c++) {
+        const cell = document.createElement('div');
+        const v = state.board[r][c];
+        cell.className = 'llk-cell' + (v < 0 ? ' empty' : '');
+        cell.textContent = v >= 0 ? ANIMALS[v] : '';
+        cell.dataset.r = r; cell.dataset.c = c;
+        if (v >= 0) cell.addEventListener('click', () => onCellClick(r, c));
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function renderPanel() {
+    document.getElementById('llk-time').textContent = '⏱ ' + state.timeLeft + 's';
+    document.getElementById('llk-time').className = 'pill' + (state.timeLeft <= 30 ? ' warn' : '');
+    document.getElementById('llk-left').textContent = '剩余 ' + (remainingCount(state.board) / 2) + ' 对';
+    document.getElementById('llk-hint').textContent = '💡 提示 ×' + state.hints;
+    document.getElementById('llk-shuffle').textContent = '🔀 洗牌 ×' + state.shuffles;
+  }
+
+  function onCellClick(r, c) {
+    if (!state || state.busy || state.over) return;
+    const sel = state.selected;
+    if (!sel) {
+      state.selected = [r, c];
+      boardEl.querySelectorAll('.llk-cell.selected').forEach(el => el.classList.remove('selected'));
+      const el = getCell(r, c);
+      if (el) el.classList.add('selected');
+      Sfx.click();
+      return;
+    }
+    if (sel[0] === r && sel[1] === c) {
+      state.selected = null;
+      boardEl.querySelectorAll('.llk-cell.selected').forEach(el => el.classList.remove('selected'));
+      return;
+    }
+    const a = sel, b = [r, c];
+    boardEl.querySelectorAll('.llk-cell.selected').forEach(el => el.classList.remove('selected'));
+    if (state.board[a[0]][a[1]] !== state.board[r][c]) {
+      // 选错：两格图案不同 → 抖动红边，并把第二个格作为新的选中
+      flashError(a, b);
+      state.selected = null;
+      state.selected = [r, c];
+      const elB = getCell(r, c);
+      if (elB) elB.classList.add('selected');
+      return;
+    }
+    const path = core.getPath(state.board, a, b);
+    if (!path) {
+      // 图案相同但路径不通 → 抖动红边，保持第一个选中
+      flashError(a, b);
+      state.selected = a;
+      const elA = getCell(a[0], a[1]);
+      if (elA) elA.classList.add('selected');
+      return;
+    }
+    state.selected = null;
+    state.busy = true;
+    removePair(a, b, path).then(() => { if (state) state.busy = false; });
+  }
+
+  async function removePair(a, b, path) {
+    const elA = getCell(a[0], a[1]), elB = getCell(b[0], b[1]);
+    drawPath(path);
+    // 连击统计：5 秒无消除则重置
+    const now = Date.now();
+    if (!state.lastElim || now - state.lastElim > 5000) state.combo = 0;
+    state.combo++;
+    state.lastElim = now;
+    // 评价文字（拐弯数 = 路径段数 - 1）
+    showEval(path.length - 2, state.combo, a, b);
+    if (elA) elA.classList.add('removing');
+    if (elA) burstParticles(a[0], a[1], elA.textContent);
+    if (elB) elB.classList.add('removing');
+    if (elB) burstParticles(b[0], b[1], elB.textContent);
+    Sfx.match();
+    await new Promise(res => setTimeout(res, 560));
+    if (!state) return;   // 等待动画期间被卸载
+    state.board[a[0]][a[1]] = -1;
+    state.board[b[0]][b[1]] = -1;
+    renderBoard(); renderPanel();
+    if (remainingCount(state.board) === 0) { win(); return; }
+    // 若无可行对：自动洗牌
+    if (!core.findPair(state.board)) {
+      state.shuffles = Math.max(0, state.shuffles - 1);
+      core.shuffleRemaining(state.board);
+      renderBoard(); renderPanel();
+      showModal({
+        icon: '🔀', title: '自动洗牌',
+        message: '当前没有可消除的对，已自动重排图案',
+        buttons: [{ label: '继续', value: 'ok', primary: true }],
+        cancelable: true
+      });
+    }
+  }
+
+  function doHint() {
+    if (!state || state.over || state.hints <= 0) return;
+    const pair = core.findPair(state.board);
+    if (!pair) return;
+    state.hints--;
+    renderPanel();
+    const [a, b] = pair;
+    const elA = boardEl.querySelector('.llk-cell[data-r="' + a[0] + '"][data-c="' + a[1] + '"]');
+    const elB = boardEl.querySelector('.llk-cell[data-r="' + b[0] + '"][data-c="' + b[1] + '"]');
+    if (elA) elA.classList.add('hint');
+    if (elB) elB.classList.add('hint');
+    Sfx.task();
+    setTimeout(() => {
+      if (elA) elA.classList.remove('hint');
+      if (elB) elB.classList.remove('hint');
+    }, 1600);
+  }
+
+  function doShuffle() {
+    if (!state || state.over || state.shuffles <= 0) return;
+    state.shuffles--;
+    core.shuffleRemaining(state.board);
+    renderBoard(); renderPanel();
+    Sfx.pop();
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    timerId = setInterval(() => {
+      if (!state || state.over) return;
+      state.timeLeft--;
+      renderPanel();
+      if (state.timeLeft <= 0) lose();
+    }, 1000);
+  }
+
+  async function win() {
+    if (state.over) return;
+    state.over = true;
+    clearInterval(timerId);
+    Sfx.win();
+    const used = TIME_LIMIT - state.timeLeft;
+    const best = Store.get('mini.llk.best', null);
+    if (best === null || used < best) Store.set('mini.llk.best', used);
+    const isNewBest = best === null || used < best;
+    const res = await showModal({
+      icon: '🏆', title: '通关成功！',
+      message: '用时 ' + used + ' 秒' + (isNewBest ? '\n🎉 新纪录！' : '\n最佳纪录 ' + Math.min(best || used, used) + ' 秒'),
+      buttons: [
+        { label: '再来一局', value: 'again', primary: true },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'again') startGame();
+    else window.Mini.showMenu();
+  }
+
+  async function lose() {
+    if (state.over) return;
+    state.over = true;
+    clearInterval(timerId);
+    Sfx.lose();
+    const res = await showModal({
+      icon: '⏰', title: '时间到！',
+      message: '还剩 ' + (remainingCount(state.board) / 2) + ' 对未消除',
+      buttons: [
+        { label: '再来一局', value: 'again', primary: true },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'again') startGame();
+    else window.Mini.showMenu();
+  }
+
+  function startGame() {
+    if (timerId) clearInterval(timerId);
+    state = {
+      board: null, timeLeft: TIME_LIMIT,
+      hints: HINT_MAX, shuffles: SHUFFLE_MAX,
+      selected: null, busy: false, over: false,
+      combo: 0, lastElim: 0
+    };
+    // 生成可解棋盘（多次重试）
+    for (let i = 0; i < 100; i++) {
+      state.board = core.createBoard(ROWS, COLS, NUM_TYPES);
+      if (core.findPair(state.board)) break;
+    }
+    renderBoard(); renderPanel();
+    startTimer();
+  }
+
+  function mount(root) {
+    root.innerHTML =
+      '<div class="panel">' +
+        '<span class="pill" id="llk-time">⏱ 180s</span>' +
+        '<span class="pill good" id="llk-left">剩余 60 对</span>' +
+        '<button class="btn ghost" id="llk-hint">💡 提示 ×5</button>' +
+        '<button class="btn ghost" id="llk-shuffle">🔀 洗牌 ×3</button>' +
+        '<button class="btn ghost" id="llk-restart">🔄 重开</button>' +
+      '</div>' +
+      '<div class="llk-wrap">' +
+        '<div class="llk-board" id="llk-board"></div>' +
+        '<svg class="llk-svg" id="llk-svg"></svg>' +
+      '</div>' +
+      '<div class="panel" style="font-size:13px;font-weight:500;color:#8a97a8;">' +
+        '点击两个相同动物，路径不超过 2 个拐弯即可消除 · 连续消除有连击评价' +
+      '</div>';
+    boardEl = root.querySelector('#llk-board');
+    svgEl = root.querySelector('#llk-svg');
+    wrapEl = root.querySelector('.llk-wrap');
+    svgEl.style.width = '100%';
+    svgEl.style.height = '100%';
+    root.querySelector('#llk-hint').addEventListener('click', () => { Sfx.click(); doHint(); });
+    root.querySelector('#llk-shuffle').addEventListener('click', () => { Sfx.click(); doShuffle(); });
+    root.querySelector('#llk-restart').addEventListener('click', () => { Sfx.click(); startGame(); });
+    startGame();
+  }
+
+  function unmount() {
+    if (timerId) clearInterval(timerId);
+    state = null;
+  }
+
+  core.mount = mount;
+  core.unmount = unmount;
+
+  registerGame('lianliankan', {
+    title: '🐶 连连看',
+    mount: root => mount(root),
+    unmount
+  });
+
+  return core;
+});
+
+</script>
+  <script>
+/* =========================================================
+ * game2048.js — 2048（6×6 · 目标 8192 · 最高分保存）
+ * 结构：纯逻辑（可 node 测试）+ UI 层（浏览器）
+ * ========================================================= */
+(function (global, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    global.Game2048 = factory();
+  }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const isNode = typeof document === 'undefined';
+
+  /* ==================== 配置 ==================== */
+  const SIZE = 8;
+  const GOAL = 8192;
+
+  /* ==================== 纯逻辑 ==================== */
+  function createBoard(size) {
+    return Array.from({ length: size }, () => Array(size).fill(0));
+  }
+
+  // 朝索引 0 方向压缩合并一行
+  function slideLine(line) {
+    const arr = line.filter(v => v !== 0);
+    const out = [];
+    let score = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (i + 1 < arr.length && arr[i] === arr[i + 1]) {
+        out.push(arr[i] * 2);
+        score += arr[i] * 2;
+        i++;
+      } else {
+        out.push(arr[i]);
+      }
+    }
+    while (out.length < line.length) out.push(0);
+    return { out, score };
+  }
+
+  const DIRS = { left: 0, up: 1, right: 2, down: 3 };
+
+  // 移动棋盘；返回 { board, score, moved }
+  function move(board, dir) {
+    const size = board.length;
+    const newBoard = createBoard(size);
+    let score = 0, moved = false;
+    for (let i = 0; i < size; i++) {
+      let line;
+      if (dir === DIRS.left) line = board[i].slice();
+      else if (dir === DIRS.right) line = board[i].slice().reverse();
+      else {
+        const col = [];
+        for (let r = 0; r < size; r++) col.push(board[r][i]);
+        line = dir === DIRS.up ? col : col.reverse();
+      }
+      const { out, score: s } = slideLine(line);
+      score += s;
+      const finalLine = (dir === DIRS.right || dir === DIRS.down) ? out.reverse() : out;
+      for (let j = 0; j < size; j++) {
+        const v = finalLine[j];
+        if (dir === DIRS.left || dir === DIRS.right) newBoard[i][j] = v;
+        else newBoard[j][i] = v;
+        if (v !== board[i][j] && (dir === DIRS.left || dir === DIRS.right)) moved = true;
+        if (v !== board[j][i] && (dir === DIRS.up || dir === DIRS.down)) moved = true;
+      }
+    }
+    return { board: newBoard, score, moved };
+  }
+
+  // 空位随机生成新数字：2 为主，4/8/16 概率递减（数值越大越难合成）
+  // 达成 2048 后进入进阶阶段：2 让出一部分概率给 32/64，难度提升
+  function spawnTile(board) {
+    const empty = [];
+    for (let r = 0; r < board.length; r++)
+      for (let c = 0; c < board[0].length; c++)
+        if (board[r][c] === 0) empty.push([r, c]);
+    if (!empty.length) return null;
+    const [r, c] = empty[Math.floor(Math.random() * empty.length)];
+    const roll = Math.random();
+    if (maxTile(board) >= 2048) {
+      // 进阶分布：2(60.5%)/4(24%)/8(9.5%)/16(4.15%)/32(1.5%)/64(0.35%)
+      board[r][c] = roll < 0.605 ? 2 : roll < 0.845 ? 4 : roll < 0.94 ? 8 : roll < 0.9815 ? 16 : roll < 0.9965 ? 32 : 64;
+    } else {
+      board[r][c] = roll < 0.65 ? 2 : roll < 0.9 ? 4 : roll < 0.98 ? 8 : 16;
+    }
+    return [r, c];
+  }
+
+  function canMove(board) {
+    const size = board.length;
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (board[r][c] === 0) return true;
+        if (c + 1 < size && board[r][c] === board[r][c + 1]) return true;
+        if (r + 1 < size && board[r][c] === board[r + 1][c]) return true;
+      }
+    }
+    return false;
+  }
+
+  function maxTile(board) {
+    let m = 0;
+    for (const row of board) for (const v of row) m = Math.max(m, v);
+    return m;
+  }
+
+  const core = {
+    SIZE, GOAL, DIRS,
+    createBoard, slideLine, move, spawnTile, canMove, maxTile
+  };
+
+  /* ==================== UI 层 ==================== */
+  if (isNode) return core;
+
+  const { Store, Sfx, showModal, registerGame } = window.Mini;
+
+  let state = null;
+  let boardEl = null;
+  let winShown = false;
+
+  function cellColor(v) {
+    if (v === 0) return '#f8f1e5';
+    if (v === 2) return '#fdf3e7';
+    if (v === 4) return '#fbe3c4';
+    if (v === 8) return '#f9c784';
+    if (v === 16) return '#f5a65b';
+    if (v === 32) return '#f28b4b';
+    if (v === 64) return '#ea6f3d';
+    if (v === 128) return '#e05633';
+    if (v === 256) return '#d9b93f';
+    if (v === 512) return '#c9a227';
+    if (v === 1024) return '#b8891d';
+    if (v === 2048) return '#a8730f';
+    if (v === 4096) return '#e56aa8';
+    if (v === 8192) return '#a85fd6';
+    return '#7c4dd6';
+  }
+
+  function cellFont(v) {
+    if (v < 100) return '30px';
+    if (v < 1000) return '26px';
+    if (v < 10000) return '22px';
+    return '18px';
+  }
+
+  // 计算每个格子相对旧位置的位移（近似配对，spawn 新格除外）
+  function computeSlides(oldBoard, newBoard, excludePos) {
+    const size = oldBoard.length;
+    const used = Array.from({ length: size }, () => Array(size).fill(false));
+    const slides = new Map();
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (excludePos && excludePos[0] === r && excludePos[1] === c) continue;
+        const v = newBoard[r][c];
+        if (v === 0) continue;
+        let found = null;
+        outer:
+        for (let or2 = 0; or2 < size; or2++) {
+          for (let oc2 = 0; oc2 < size; oc2++) {
+            if (!used[or2][oc2] && oldBoard[or2][oc2] === v) { found = [or2, oc2]; break outer; }
+          }
+        }
+        if (found) {
+          used[found[0]][found[1]] = true;
+          slides.set(r + ',' + c, { dr: found[0] - r, dc: found[1] - c });
+        }
+      }
+    }
+    return slides;
+  }
+
+  function renderBoard(newPos, mergedCells, slides) {
+    const size = SIZE;
+    boardEl.style.gridTemplateColumns = 'repeat(' + size + ', 1fr)';
+    boardEl.innerHTML = '';
+    // 与 CSS 一致：padding 10、gap 6，格子正方形
+    const pad = 10, gap = 6;
+    const cw = Math.max(1, (boardEl.clientWidth - pad * 2 - gap * (size - 1)) / size);
+    const ch = cw;
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        const cell = document.createElement('div');
+        const v = state.board[r][c];
+        cell.className = 'g2048-cell';
+        cell.textContent = v || '';
+        cell.style.background = cellColor(v);
+        cell.style.color = v >= 128 ? '#fff' : '#6b5b45';
+        cell.style.fontSize = v ? cellFont(v) : '30px';
+        const key = r + ',' + c;
+        if (slides && slides.has(key) && !(newPos && newPos[0] === r && newPos[1] === c)) {
+          const s = slides.get(key);
+          cell.style.transform = 'translate(' + (s.dc * cw) + 'px,' + (s.dr * ch) + 'px)';
+          cell.dataset.slide = '1';
+        }
+        if (newPos && newPos[0] === r && newPos[1] === c) cell.classList.add('new');
+        if (mergedCells && mergedCells.has(key)) cell.classList.add('merged');
+        boardEl.appendChild(cell);
+      }
+    }
+    // 滑动动画：reflow 后带摩擦缓动曲线归位
+    if (slides && slides.size) {
+      void boardEl.offsetWidth;
+      boardEl.querySelectorAll('.g2048-cell[data-slide]').forEach(el => {
+        el.style.transition = 'transform 0.18s cubic-bezier(.22,.85,.35,1)';
+        el.style.transform = '';
+      });
+    }
+  }
+
+  function renderPanel() {
+    document.getElementById('g2048-score').textContent = '分数 ' + state.score;
+    document.getElementById('g2048-best').textContent = '最高 ' + state.best;
+    // 目标标题 + 进度条 + 当前最大数字
+    const max = core.maxTile(state.board);
+    const fill = document.getElementById('g2048-goal-fill');
+    const maxEl = document.getElementById('g2048-max');
+    if (fill) fill.style.width = Math.min(100, max / GOAL * 100) + '%';
+    if (maxEl) maxEl.textContent = '当前最大 ' + max + ' / ' + GOAL;
+  }
+
+  function onMove(dir) {
+    if (!state || state.over) return;
+    const oldBoard = state.board.map(row => row.slice());
+    const res = core.move(state.board, dir);
+    if (!res.moved) return;
+    // 标记真正的合并格（值翻倍），而非仅“移动”的格子
+    const merged = new Set();
+    for (let r = 0; r < SIZE; r++)
+      for (let c = 0; c < SIZE; c++)
+        if (oldBoard[r][c] > 0 && res.board[r][c] === oldBoard[r][c] * 2)
+          merged.add(r + ',' + c);
+    state.board = res.board;
+    state.score += res.score;
+    const newPos = core.spawnTile(state.board);
+    if (state.score > state.best) {
+      state.best = state.score;
+      Store.set('mini.2048.best', state.best);
+    }
+    const slides = computeSlides(oldBoard, state.board, newPos);
+    // 合并格不做位移动画（原地弹跳即可），避免 transform 与缩放动画冲突
+    merged.forEach(k => slides.delete(k));
+    renderBoard(newPos, merged, slides);
+    renderPanel();
+    Sfx.merge();
+    const max = core.maxTile(state.board);
+    if (!winShown && max >= GOAL) {
+      winShown = true;
+      win();
+    } else if (!core.canMove(state.board)) {
+      state.over = true;
+      lose();
+    }
+  }
+
+  async function win() {
+    state.over = true; // 弹窗期间锁定操作
+    Sfx.win();
+    const res = await showModal({
+      icon: '🎉', title: '达成 ' + GOAL + '！',
+      message: '太厉害了！分数 ' + state.score,
+      buttons: [
+        { label: '继续挑战', value: 'continue', primary: true },
+        { label: '重新开始', value: 'restart' },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'restart') startGame();
+    else if (res === 'continue') state.over = false;
+    else if (res === 'menu') window.Mini.showMenu();
+    else state.over = false; // 防御：异常关闭时解锁，避免锁死
+  }
+
+  async function lose() {
+    Sfx.lose();
+    const res = await showModal({
+      icon: '💀', title: '游戏结束',
+      message: '无法继续移动了\n最终分数 ' + state.score,
+      buttons: [
+        { label: '重新开始', value: 'restart', primary: true },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'restart') startGame();
+    else window.Mini.showMenu();
+  }
+
+  function onKey(e) {
+    const map = {
+      ArrowLeft: 'left', ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down',
+      a: 'left', w: 'up', d: 'right', s: 'down',
+      A: 'left', W: 'up', D: 'right', S: 'down'
+    };
+    const dir = map[e.key];
+    if (dir) {
+      e.preventDefault();
+      onMove(core.DIRS[dir]);
+    }
+  }
+
+  function startGame() {
+    state = {
+      board: core.createBoard(SIZE),
+      score: 0,
+      best: Store.get('mini.2048.best', 0),
+      over: false
+    };
+    winShown = false;
+    core.spawnTile(state.board);
+    core.spawnTile(state.board);
+    renderBoard(); renderPanel();
+  }
+
+  function mount(root) {
+    root.innerHTML =
+      '<div class="panel">' +
+        '<span class="pill good" id="g2048-score">分数 0</span>' +
+        '<span class="pill" id="g2048-best">最高 0</span>' +
+        '<button class="btn ghost" id="g2048-restart">🔄 重开</button>' +
+      '</div>' +
+      '<div class="g2048-goal">' +
+        '<div class="goal-title">🎯 目标 ' + GOAL + '</div>' +
+        '<div class="goal-bar"><div class="goal-fill" id="g2048-goal-fill"></div></div>' +
+        '<div class="goal-max" id="g2048-max">当前最大 0 / ' + GOAL + '</div>' +
+      '</div>' +
+      '<div class="g2048-board" id="g2048-board"></div>' +
+      '<div class="panel" style="font-size:13px;font-weight:500;color:#8a97a8;">' +
+        '方向键 / WASD / 手机滑动，相同数字合并，达到 ' + GOAL + ' 即可获胜' +
+      '</div>';
+    boardEl = document.getElementById('g2048-board');
+    // 手机触摸滑动
+    let touchStart = null;
+    boardEl.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }, { passive: true });
+    boardEl.addEventListener('touchend', (e) => {
+      if (!touchStart || !e.changedTouches.length) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStart.x, dy = t.clientY - touchStart.y;
+      touchStart = null;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+      const dir = Math.abs(dx) > Math.abs(dy)
+        ? (dx > 0 ? 'right' : 'left')
+        : (dy > 0 ? 'down' : 'up');
+      onMove(core.DIRS[dir]);
+    }, { passive: true });
+    document.getElementById('g2048-restart').addEventListener('click', () => { Sfx.click(); startGame(); });
+    document.addEventListener('keydown', onKey);
+    startGame();
+  }
+
+  function unmount() {
+    document.removeEventListener('keydown', onKey);
+    state = null;
+  }
+
+  core.mount = mount;
+  core.unmount = unmount;
+
+  registerGame('game2048', {
+    title: '🔢 2048',
+    mount: root => mount(root),
+    unmount
+  });
+
+  return core;
+});
+
+</script>
+  <script>
+/* =========================================================
+ * minesweeper.js — 扫雷（三档难度 · 完整操作 · 计时纪录）
+ * 结构：纯逻辑（可 node 测试）+ UI 层（浏览器）
+ * ========================================================= */
+(function (global, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory();
+  } else {
+    global.MinesweeperGame = factory();
+  }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const isNode = typeof document === 'undefined';
+
+  /* ==================== 配置 ==================== */
+  const DIFFS = {
+    easy:   { label: '初级', rows: 9,  cols: 9,  mines: 10 },
+    medium: { label: '中级', rows: 16, cols: 16, mines: 40 },
+    hard:   { label: '高级', rows: 16, cols: 30, mines: 99 }
+  };
+  const FLAG = 1, QUESTION = 2;
+
+  /* ==================== 纯逻辑 ==================== */
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function neighbors(rows, cols, r, c) {
+    const list = [];
+    for (let dr = -1; dr <= 1; dr++)
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const rr = r + dr, cc = c + dc;
+        if (rr >= 0 && rr < rows && cc >= 0 && cc < cols) list.push([rr, cc]);
+      }
+    return list;
+  }
+
+  // 生成雷盘；safe 位置及其周围 8 格不布雷（首次点击保护）
+  function createBoard(rows, cols, mines, safeR, safeC) {
+    const board = Array.from({ length: rows }, () => Array(cols).fill(0));
+    const forbidden = new Set();
+    if (safeR >= 0 && safeC >= 0) {
+      forbidden.add(safeR + ',' + safeC);
+      neighbors(rows, cols, safeR, safeC).forEach(([r, c]) => forbidden.add(r + ',' + c));
+    }
+    const candidates = [];
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
+        if (!forbidden.has(r + ',' + c)) candidates.push([r, c]);
+    const chosen = shuffle(candidates).slice(0, mines);
+    chosen.forEach(([r, c]) => { board[r][c] = -1; });
+    // 计算数字
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
+        if (board[r][c] !== -1)
+          board[r][c] = neighbors(rows, cols, r, c).filter(([rr, cc]) => board[rr][cc] === -1).length;
+    return board;
+  }
+
+  function countMines(board) {
+    let n = 0;
+    for (const row of board) for (const v of row) if (v === -1) n++;
+    return n;
+  }
+
+  // 揭开一格（含 0 格 BFS 展开）；返回 { exploded, cells }
+  function revealCell(board, revealed, flagged, r, c) {
+    if (revealed[r][c] || flagged[r][c] === FLAG) return { exploded: false, cells: [] };
+    const rows = board.length, cols = board[0].length;
+    const cells = [];
+    const stack = [[r, c]];
+    let exploded = false;
+    while (stack.length) {
+      const [rr, cc] = stack.pop();
+      if (revealed[rr][cc] || flagged[rr][cc] === FLAG) continue;
+      revealed[rr][cc] = true;
+      cells.push([rr, cc]);
+      if (board[rr][cc] === -1) { exploded = true; continue; }
+      if (board[rr][cc] === 0) {
+        neighbors(rows, cols, rr, cc).forEach(([nr, nc]) => {
+          if (!revealed[nr][nc] && flagged[nr][nc] !== FLAG) stack.push([nr, nc]);
+        });
+      }
+    }
+    return { exploded, cells };
+  }
+
+  function flagCountAround(flagged, r, c) {
+    return neighbors(flagged.length, flagged[0].length, r, c)
+      .filter(([rr, cc]) => flagged[rr][cc] === FLAG).length;
+  }
+
+  // 双击数字格：周围旗数 == 数字时翻开其余格子
+  function chord(board, revealed, flagged, r, c) {
+    const n = board[r][c];
+    if (n <= 0 || !revealed[r][c]) return { exploded: false, cells: [] };
+    if (flagCountAround(flagged, r, c) !== n) return { exploded: false, cells: [] };
+    const cells = [];
+    let exploded = false;
+    neighbors(board.length, board[0].length, r, c).forEach(([rr, cc]) => {
+      if (revealed[rr][cc] || flagged[rr][cc] === FLAG) return;
+      const res = revealCell(board, revealed, flagged, rr, cc);
+      res.cells.forEach(p => cells.push(p));
+      if (res.exploded) exploded = true;
+    });
+    return { exploded, cells };
+  }
+
+  // 是否胜利：所有非雷格均已揭开
+  function isWon(board, revealed) {
+    const rows = board.length, cols = board[0].length;
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
+        if (board[r][c] !== -1 && !revealed[r][c]) return false;
+    return true;
+  }
+
+  const core = {
+    DIFFS, FLAG, QUESTION,
+    createBoard, countMines, revealCell, flagCountAround, chord, isWon, neighbors
+  };
+
+  /* ==================== UI 层 ==================== */
+  if (isNode) return core;
+
+  const { Store, Sfx, showModal, registerGame } = window.Mini;
+
+  let state = null;
+  let timerId = null;
+  let boardEl = null, minesEl = null, timeEl = null, diffBtns = [], modeBtnEl = null;
+
+  function cellClass(r, c) {
+    const rev = state.revealed[r][c];
+    if (rev) {
+      if (state.board[r][c] === -1) return 'ms-cell revealed mine';
+      return 'ms-cell revealed';
+    }
+    return 'ms-cell';
+  }
+
+  function cellContent(r, c) {
+    const rev = state.revealed[r][c];
+    if (!rev) {
+      if (state.flagged[r][c] === FLAG) return '🚩';
+      if (state.flagged[r][c] === QUESTION) return '❓';
+      return '';
+    }
+    const v = state.board[r][c];
+    if (v === -1) return '💣';
+    if (v === 0) return '';
+    return '<span class="ms-num-' + v + '">' + v + '</span>';
+  }
+
+  function renderBoard() {
+    const rows = state.rows, cols = state.cols;
+    boardEl.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    boardEl.innerHTML = '';
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = cellClass(r, c);
+        cell.innerHTML = cellContent(r, c);
+        cell.dataset.r = r; cell.dataset.c = c;
+        cell.addEventListener('click', () => onLeft(r, c, false));
+        cell.addEventListener('dblclick', () => onLeft(r, c, true));
+        cell.addEventListener('contextmenu', (e) => { e.preventDefault(); onRight(r, c); });
+        boardEl.appendChild(cell);
+      }
+    }
+    if (minesEl) minesEl.textContent = '💣 ' + (state.mines - state.flagsUsed);
+    if (timeEl) timeEl.textContent = '⏱ ' + state.time + 's';
+  }
+
+  function onRight(r, c) {
+    if (!state || state.over) return;
+    if (state.revealed[r][c]) return;
+    state.flagged[r][c] = (state.flagged[r][c] + 1) % 3;
+    state.flagsUsed = 0;
+    for (let i = 0; i < state.rows; i++)
+      for (let j = 0; j < state.cols; j++)
+        if (state.flagged[i][j] === FLAG) state.flagsUsed++;
+    Sfx.flag();
+    renderBoard();
+  }
+
+  function onLeft(r, c, isDbl) {
+    if (!state || state.over) return;
+    // 手机标旗模式：左键也走标记逻辑（电脑右键仍可用）
+    if (state.flagMode) { onRight(r, c); return; }
+    if (state.revealed[r][c]) {
+      // 已揭开数字格：单击或双击都尝试 chord（经典行为）
+      const res = core.chord(state.board, state.revealed, state.flagged, r, c);
+      if (res.cells.length) Sfx.reveal();
+      if (res.exploded) { endGame(false); return; }
+      if (isWonNow()) { endGame(true); return; }
+      renderBoard();
+      return;
+    }
+    if (state.flagged[r][c] === FLAG) return;
+    // 首击保护：第一次揭开前才布雷
+    if (!state.started) {
+      state.board = core.createBoard(state.rows, state.cols, state.mines, r, c);
+      state.started = true;
+      startTimer();
+    }
+    const res = core.revealCell(state.board, state.revealed, state.flagged, r, c);
+    if (res.cells.length) Sfx.reveal();
+    if (res.exploded) { endGame(false); return; }
+    if (isWonNow()) { endGame(true); return; }
+    renderBoard();
+  }
+
+  function isWonNow() {
+    return core.isWon(state.board, state.revealed);
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    timerId = setInterval(() => {
+      if (!state || state.over) return;
+      state.time++;
+      if (timeEl) timeEl.textContent = '⏱ ' + state.time + 's';
+    }, 1000);
+  }
+
+  function revealAllMines() {
+    for (let r = 0; r < state.rows; r++)
+      for (let c = 0; c < state.cols; c++)
+        if (state.board[r][c] === -1 && !state.revealed[r][c])
+          state.revealed[r][c] = true;
+  }
+
+  async function endGame(won) {
+    if (state.over) return;
+    state.over = true;
+    clearInterval(timerId);
+    if (!won) {
+      revealAllMines();
+      renderBoard();
+      Sfx.boom();
+      const res = await showModal({
+        icon: '💥', title: '踩到雷了！',
+        message: '用时 ' + state.time + ' 秒',
+        buttons: [
+          { label: '再来一局', value: 'again', primary: true },
+          { label: '返回菜单', value: 'menu' }
+        ]
+      });
+      if (res === 'again') startGame(state.diffKey);
+      else window.Mini.showMenu();
+      return;
+    }
+    Sfx.win();
+    // 纪录保存（记录是否破纪录，避免存后误报）
+    const best = Store.get('mini.ms.best', {});
+    const key = state.diffKey;
+    const prevBest = best[key];
+    const isRecord = !prevBest || state.time < prevBest;
+    if (isRecord) {
+      best[key] = state.time;
+      Store.set('mini.ms.best', best);
+    }
+    const res = await showModal({
+      icon: '🏆', title: '扫雷成功！',
+      message: DIFFS[key].label + ' 用时 ' + state.time + ' 秒' + (isRecord ? '\n🎉 新纪录！' : ''),
+      buttons: [
+        { label: '再来一局', value: 'again', primary: true },
+        { label: '返回菜单', value: 'menu' }
+      ]
+    });
+    if (res === 'again') startGame(state.diffKey);
+    else window.Mini.showMenu();
+  }
+
+  function startGame(diffKey) {
+    const diff = DIFFS[diffKey];
+    clearInterval(timerId);
+    state = {
+      diffKey, rows: diff.rows, cols: diff.cols, mines: diff.mines,
+      board: core.createBoard(diff.rows, diff.cols, diff.mines, -1, -1),
+      revealed: Array.from({ length: diff.rows }, () => Array(diff.cols).fill(false)),
+      flagged: Array.from({ length: diff.rows }, () => Array(diff.cols).fill(0)),
+      flagsUsed: 0, time: 0, started: false, over: false,
+      flagMode: false
+    };
+    // 高亮当前难度按钮
+    diffBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.diff === diffKey);
+    });
+    if (modeBtnEl) modeBtnEl.textContent = state.flagMode ? '🚩 模式：标旗' : '⚒ 模式：揭开';
+    renderBoard();
+  }
+
+  function toggleMode() {
+    if (!state) return;
+    state.flagMode = !state.flagMode;
+    if (modeBtnEl) modeBtnEl.textContent = state.flagMode ? '🚩 模式：标旗' : '⚒ 模式：揭开';
+    Sfx.click();
+  }
+
+  function mount(root) {
+    root.innerHTML =
+      '<div class="panel">' +
+        Object.keys(DIFFS).map(k =>
+          '<button class="btn ghost ms-diff-btn" data-diff="' + k + '">' + DIFFS[k].label + '</button>'
+        ).join('') +
+        '<span class="pill" id="ms-mines">💣 10</span>' +
+        '<span class="pill" id="ms-time">⏱ 0s</span>' +
+        '<button class="btn ghost" id="ms-mode">⚒ 模式：揭开</button>' +
+        '<button class="btn ghost" id="ms-restart">🔄 重开</button>' +
+      '</div>' +
+      '<div class="ms-board" id="ms-board"></div>' +
+      '<div class="panel" style="font-size:13px;font-weight:500;color:#8a97a8;">' +
+        '左键揭开 · 右键/模式按钮标旗 · 点击已翻开数字可快速翻开周围' +
+      '</div>';
+    // 一律在容器内查询，避免全局 id 冲突导致找不到元素
+    boardEl = root.querySelector('#ms-board');
+    minesEl = root.querySelector('#ms-mines');
+    timeEl = root.querySelector('#ms-time');
+    modeBtnEl = root.querySelector('#ms-mode');
+    diffBtns = Array.from(root.querySelectorAll('.ms-diff-btn'));
+    if (modeBtnEl) modeBtnEl.addEventListener('click', toggleMode);
+    const restartBtn = root.querySelector('#ms-restart');
+    if (restartBtn) restartBtn.addEventListener('click', () => { Sfx.click(); startGame(state ? state.diffKey : 'easy'); });
+    diffBtns.forEach(btn => {
+      btn.addEventListener('click', () => { Sfx.click(); startGame(btn.dataset.diff); });
+    });
+    startGame('easy');
+  }
+
+  function unmount() {
+    clearInterval(timerId);
+    state = null;
+  }
+
+  core.mount = mount;
+  core.unmount = unmount;
+
+  registerGame('minesweeper', {
+    title: '💣 扫雷',
+    mount: root => mount(root),
+    unmount
+  });
+
+  return core;
+});
+
+</script>
+</body>
+</html>
